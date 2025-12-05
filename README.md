@@ -1,97 +1,96 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# OTP Demo
 
-# Getting Started
+OTP Demo is a React Native + TypeScript playground that showcases a production-style one-time-password flow. It uses a single-screen navigation stack, custom form controls, and small reusable UI atoms to demonstrate input validation, resend flows, and button states.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Tech Stack
 
-## Step 1: Start Metro
+- React Native 0.82 with React 19
+- React Navigation (native stack)
+- TypeScript, ESLint, Prettier, Jest
+- React Native SVG + Safe Area Context
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Prerequisites
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Make sure your local environment satisfies the official [React Native environment setup](https://reactnative.dev/docs/set-up-your-environment).
 
-```sh
-# Using npm
-npm start
+- Node.js 20+ and npm (or Yarn)
+- Watchman (macOS) for stable file watching
+- Android Studio + Android SDK / emulator
+- Xcode, Command Line Tools, and CocoaPods for iOS builds
+- Ruby bundler installed if you plan to install Pods via `bundle exec`
 
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
+## Installation
 
 ```sh
-# Using npm
-npm run android
+git clone <repo-url>
+cd OTPDemo
+npm install          # or yarn
 
-# OR using Yarn
-yarn android
+# iOS-only prerequisites
+cd ios && bundle install        # installs CocoaPods via Bundler (first time only)
+bundle exec pod install         # install native pods whenever deps change
+cd ..
 ```
 
-### iOS
+## Running the App
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+1. Start Metro once per session:
+   ```sh
+   npm start
+   ```
+2. With Metro running, launch a target:
+   - **Android**: `npm run android` (selects first connected/emulated device)
+   - **iOS simulator**: `npm run ios`
+3. Optional scripts:
+   - **Unit tests**: `npm test`
+   - **Lint**: `npm run lint`
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+Metro supports Hot Reload/Fast Refresh. Use the device dev menu (⌘+M / Ctrl+M / shake) to reload or toggle debug options.
 
-```sh
-bundle install
+## Project Scripts
+
+| Command           | Description                                 |
+| ----------------- | ------------------------------------------- |
+| `npm start`       | Run Metro bundler                           |
+| `npm run android` | Build & deploy the debug app to Android     |
+| `npm run ios`     | Build & deploy to the default iOS simulator |
+| `npm test`        | Execute Jest unit tests under `__tests__`   |
+| `npm run lint`    | Run ESLint using RN’s shared config         |
+
+## Folder Structure
+
+```
+OTPDemo
+├── App.tsx                # Entry point, sets up navigation + SafeArea
+├── __tests__/             # Jest tests (App smoke test)
+├── android/               # Native Android project (Gradle)
+├── ios/                   # Native iOS project (Xcode + Pods)
+├── src/
+│   ├── assets/            # SVG icon components
+│   ├── component/         # Shared UI atoms (button, headers, errors)
+│   ├── constants/         # Design tokens such as colors
+│   ├── navigation/        # Root navigator + typed params
+│   ├── screens/
+│   │   └── otp/           # OTP screen + composed subcomponents
+│   ├── types/             # Global ambient type declarations
+│   └── utils/             # (Reserved for helpers)
+├── vendor/                # Bundled Ruby for deterministic pod installs
+├── index.js               # Registers the root component
+├── package.json
+└── README.md
 ```
 
-Then, and every time you update your native dependencies, run:
+### OTP Flow at a Glance
 
-```sh
-bundle exec pod install
-```
+- `src/screens/otp/OtpScreen.tsx` orchestrates the UI: header, OTP input, verify button, and resend timer.
+- `src/screens/otp/component/otpInput` holds a controlled, ref-driven OTP input that exposes `validate()` and `value`.
+- `src/screens/otp/component/resendButton` handles cooldown logic and triggers the `onResend` callback.
+- `src/component` exports shared pieces such as `Button`, `CommonHeader`, and `ErrorText` to keep the screen lean.
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## Troubleshooting
 
-```sh
-# Using npm
-npm run ios
+- **Pods fail**: run `bundle exec pod repo update` inside `ios` then retry `pod install`.
+- **Android build errors**: ensure an emulator or device is connected and `ANDROID_HOME` is configured.
+- **Metro stuck**: clear caches with `npm start -- --reset-cache`.
 
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Need help? Reach out or file an issue with your OS version, RN version, and the exact command output. Happy hacking!
